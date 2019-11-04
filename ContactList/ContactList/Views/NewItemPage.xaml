@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage
+    x:Class="ContactList.Views.NewItemPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="New Item"
+    mc:Ignorable="d">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Clicked="Cancel_Clicked" Text="Cancel" />
+        <ToolbarItem Clicked="Save_Clicked" Text="Save" />
+    </ContentPage.ToolbarItems>
+
+    <ContentPage.Content>
+        <StackLayout Padding="15" Spacing="20">
+            <Editor
+                Margin="0"
+                d:Text="Provide Your Contact Details"
+                FontSize="Small"
+                Text="{Binding Item.Description}" />
+            <Label FontSize="Medium" Text="First Name" />
+            <Entry
+                d:Text="First Name"
+                FontSize="Small"
+                Text="{Binding Item.Text}" />
+            <Label FontSize="Medium" Text="Last Name" />
+            <Entry
+                d:Text="Last Name"
+                FontSize="Small"
+                Text="{Binding Item.Text}" />
+            <Label FontSize="Medium" Text="Email Address" />
+            <Entry
+                d:Text="Mobile Number"
+                FontSize="Small"
+                Text="{Binding Item.Text}" />
+            <Label FontSize="Medium" Text="Mobile Number" />
+            <Entry
+                d:Text="Email Address"
+                FontSize="Small"
+                Text="{Binding Item.Text}" />
+            <Label FontSize="Medium" Text="ID" />
+            <Entry
+                d:Text="ID"
+                FontSize="Small"
+                Text="{Binding Item.Text}" />
+
+        </StackLayout>
+    </ContentPage.Content>
+
+</ContentPage>
