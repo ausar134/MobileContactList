@@ -29,13 +29,13 @@
                     <ViewCell>
                         <StackLayout Padding="10">
                             <Label
-                                d:Text="{Binding .}"
+                               d:Text="{Binding .}"
                                 FontSize="16"
                                 LineBreakMode="NoWrap"
                                 Style="{DynamicResource ListItemTextStyle}"
                                 Text="{Binding Text}" />
                             <Label
-                                d:Text="Item description"
+                                d:Text="Item Description"
                                 FontSize="13"
                                 LineBreakMode="NoWrap"
                                 Style="{DynamicResource ListItemDetailTextStyle}"

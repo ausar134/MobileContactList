@@ -14,7 +14,7 @@ namespace ContactList.Services
         {
             items = new List<Item>()
             {
-                new Item { Id = Guid.NewGuid().ToString(), Text = "Contact Details", Description="Provide contact details about a person." },
+                new Item { Id = Guid.NewGuid().ToString(), Text = "Contact Details", Description="Provide contact details." },
             };
         }
 
@@ -51,5 +51,7 @@ namespace ContactList.Services
         {
             return await Task.FromResult(items);
         }
+
+       
     }
 }

@@ -5,6 +5,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 using ContactList.Models;
+using ContactList.ViewModels;
 
 namespace ContactList.Views
 {
@@ -13,6 +14,7 @@ namespace ContactList.Views
     [DesignTimeVisible(false)]
     public partial class NewItemPage : ContentPage
     {
+        private NewItemViewModel ViewModel { get; }
         public Item Item { get; set; }
 
         public NewItemPage()
@@ -21,11 +23,11 @@ namespace ContactList.Views
 
             Item = new Item
             {
-                Text = "Item name",
-                Description = "This is an item description."
+                Description = "Contact Details",
+                Text = "Hello"
             };
 
-            BindingContext = this;
+            BindingContext = ViewModel = new NewItemViewModel();
         }
 
         async void Save_Clicked(object sender, EventArgs e)

@@ -39,17 +39,17 @@
         </Tab>
     </TabBar>
 
-    <!-- Optional Templates 
+     <!--Optional Templates 
     // These may be provided inline as below or as separate classes.
 
-    // This header appears at the top of the Flyout.
-    <Shell.FlyoutHeaderTemplate>
+    // This header appears at the top of the Flyout.-->
+    <!--<Shell.FlyoutHeaderTemplate>
         <DataTemplate>
-            <Grid>ContentHere</Grid>
+            <Grid></Grid>
         </DataTemplate>
     </Shell.FlyoutHeaderTemplate>
 
-    // ItemTemplate is for ShellItems as displayed in a Flyout
+    --><!--// ItemTemplate is for ShellItems as displayed in a Flyout--><!--
     <Shell.ItemTemplate>
         <DataTemplate>
             <ContentView>
@@ -58,15 +58,15 @@
         </DataTemplate>
     </Shell.ItemTemplate>
 
-    // MenuItemTemplate is for MenuItems as displayed in a Flyout
+    --><!--// MenuItemTemplate is for MenuItems as displayed in a Flyout--><!--
     <Shell.MenuItemTemplate>
         <DataTemplate>
             <ContentView>
                 Bindable Properties: Text, Icon
-            </ContentView>
-        </DataTemplate>
-    </Shell.MenuItemTemplate>
+            </ContentView>-->
+        <!--</DataTemplate>
+    </Shell.MenuItemTemplate>-->
 
-    -->
+    
 
 </Shell>
