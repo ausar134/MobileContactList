@@ -18,7 +18,7 @@ namespace ContactList.ViewModels
 
         public NewItemViewModel()
         {
-            Title = "Add new contact";
+            Title = "Add new contact here";
             Items = new ObservableCollection<Item>();
             
 
