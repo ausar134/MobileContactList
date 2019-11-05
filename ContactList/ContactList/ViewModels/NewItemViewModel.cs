@@ -3,38 +3,39 @@ using ContactList.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace ContactList.ViewModels
 {
-    public class NewItemViewModel:BaseViewModel
+    public class NewItemViewModel : BaseViewModel
     {
-        public ObservableCollection<Item> Items { get; set; }
-        public Command AddItemsCommand { get; set; }
+       
+    public event EventHandler<Item> ItemSaved;
+        public event EventHandler Cancel;
 
+        private Item item;
+        public Item Item { get => item; set => SetProperty(ref item, value); }
 
+        public ICommand SaveItemCommand { get; }
+        public ICommand CancelCommand { get; }
 
         public NewItemViewModel()
         {
-            Title = "Add new contact here";
-            Items = new ObservableCollection<Item>();
-            
-
-            MessagingCenter.Subscribe<NewItemPage, Item>(this, "AddItem", async (obj, item) =>
+            SaveItemCommand = new Command(() =>
             {
-                var newItem = item as Item;
-                Items.Add(newItem);
-                await DataStore.AddItemAsync(newItem);
+                MessagingCenter.Send(this, "AddItem", Item);
+                ItemSaved?.Invoke(this, Item);
+            });
+            CancelCommand = new Command(() =>
+            {
+                Cancel?.Invoke(this, EventArgs.Empty);
             });
         }
-        public async Task<bool> AddItemAsync(Item item)
-        {
-            Items.Add(item);
-
-            return await Task.FromResult(true);
-        }
-
     }
+
 }
+
