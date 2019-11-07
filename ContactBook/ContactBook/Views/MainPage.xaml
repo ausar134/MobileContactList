@@ -3,16 +3,17 @@
     x:Class="ContactBook.Views.MainPage"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
     Title="{Binding Title}">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Command="{Binding NavigateToContactDetailsCommand}" Text="Add new contact"/>
+        <ToolbarItem Command="{Binding RefreshCommand}" Text="Refresh Contact List"/>
     </ContentPage.ToolbarItems>
     <StackLayout
         Padding="20,20,20,20"
         HorizontalOptions="CenterAndExpand"
         VerticalOptions="FillAndExpand">
-        <ListView ItemsSource="{Binding People}">
+        <ListView ItemsSource="{Binding People}" SelectedItem="{Binding SelectedItem}" ItemTapped="{Binding GetSelectedItemCommand}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
@@ -20,14 +21,11 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <Label Grid.Column="0" Text="{Binding FirstName}"/>
                             <Label Grid.Column="1" Text="{Binding LastName}"/>
-                            <Label Grid.Column="2" Text="{Binding MobileNumber}"/>
-                            <Label Grid.Column="3" Text="{Binding Email}"/>
+                            <!--<Label Grid.Column="2" Text="{Binding MobileNumber}"/>
+                            <Label Grid.Column="3" Text="{Binding Email}"/-->
                         </Grid>
                     </ViewCell>
                 </DataTemplate>
@@ -42,6 +40,9 @@
                 </StackLayout>
             </ListView.Header>
         </ListView>
+        <StackLayout>
+            <Button Command="{Binding NavigateToContactDetailsCommand}" Text="Add new contact"/>
+        </StackLayout>
     </StackLayout>
 
 </ContentPage>
