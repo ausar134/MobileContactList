@@ -20,14 +20,16 @@ namespace ContactBook.ViewModels
             SaveContactDetailsCommand = new DelegateCommand(SaveContactDetails);
             CancelCommand = new DelegateCommand(Cancel);
             
-            DeleteCommand = new DelegateCommand<Person>(async (p) => { await Delete(p); });
+            DeleteCommand = new DelegateCommand(async () => { await Delete(); });
         }
 
         private IContactsApi Api { get; }
 
         private Person person;
 
-        public DelegateCommand<Person> DeleteCommand { get; }
+        private ApiAction Action { get; set; }
+
+        public DelegateCommand DeleteCommand { get; }
 
         public DelegateCommand CancelCommand { get; }
         public DelegateCommand SaveContactDetailsCommand { get; }
@@ -46,15 +48,23 @@ namespace ContactBook.ViewModels
 
         public string Email { get => email; set => SetProperty(ref email, value); }
 
+        private int internalPhone;
+
+        public int InternalPhone { get => internalPhone; set => SetProperty(ref internalPhone, value); }
+
         private async void SaveContactDetails()
         {
             person.FirstName = FirstName;
             person.LastName = LastName;
             person.MobileNumber = MobileNumber;
             person.EmailAddress = Email;
+            person.InternalPhone = InternalPhone;
 
             try
             {
+                Action = person.Id > 0
+                    ? ApiAction.Edited
+                    : ApiAction.Added;
                 person = await (person.Id > 0
                     ? Api.UpdatePersonAsync(person.Id, person)
                     : Api.AddPersonAsync(person));
@@ -63,10 +73,11 @@ namespace ContactBook.ViewModels
             {
                 await App.Current.MainPage.DisplayAlert("error", e.Message, "Ok");
             }
-           
+
             var parameters = new NavigationParameters
             {
-                {"person",person }
+                {"person",person },
+                {"action",Action },
             };
 
             await NavigationService.GoBackAsync(parameters);            
@@ -77,27 +88,36 @@ namespace ContactBook.ViewModels
             await NavigationService.GoBackAsync();
         }
 
-        private async Task Delete(Person p)
+        private async Task Delete()
         {
             try
             {
-                await Api.DeletePersonAsync(p.Id);
+                await Api.DeletePersonAsync(person.Id);
+                Action = ApiAction.Deleted;
             }
             catch (Exception ex)
             {
                 await App.Current.MainPage.DisplayAlert("error", ex.Message, "Ok");
             }
+
+            var parameters = new NavigationParameters
+            {
+                {"person",person },
+                {"action",Action },
+            };
+            await NavigationService.GoBackAsync(parameters);
         }
 
         public override void OnNavigatedTo(INavigationParameters parameters)
         {
-            
-            var person = parameters["person"] as Person ?? new Person();
+
+            person = parameters["person"] as Person ?? new Person();
             
             FirstName = person.FirstName;
             LastName = person.LastName;
             MobileNumber = person.MobileNumber;
             Email = person.EmailAddress;
+            InternalPhone = person.InternalPhone;
 
             base.OnNavigatedTo(parameters);
         }

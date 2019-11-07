@@ -12,11 +12,5 @@ namespace ContactBook.Views
         {
             InitializeComponent();
         }
-        private async void SelectedItem(Object sender, ItemTappedEventArgs e)
-        {
-            var mydetails = e.Item as Person;
-            await Navigation.PushAsync(new ContactDetailsPage(mydetails.FirstName, mydetails.LastName, mydetails.MobileNumber, mydetails.EmailAddress));
-
-        }
     }
 }

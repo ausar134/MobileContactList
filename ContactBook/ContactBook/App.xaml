@@ -1,11 +1,34 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<prism:PrismApplication xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:prism="clr-namespace:Prism.DryIoc;assembly=Prism.DryIoc.Forms"
-             x:Class="ContactBook.App">
-	<Application.Resources>
+<prism:PrismApplication
+    x:Class="ContactBook.App"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:prism="clr-namespace:Prism.DryIoc;assembly=Prism.DryIoc.Forms">
+    <Application.Resources>
+        <Style x:Key="CancelButtonStyle" TargetType="Button">
+            <Setter Property="BackgroundColor" Value="Crimson" />
+            <Setter Property="TextColor" Value="WhiteSmoke" />
+        </Style>
+        <OnPlatform x:Key="Material" x:TypeArguments="x:String">
+            <On Platform="iOS" Value="Material Design Icons" />
+            <On Platform="Android" Value="materialdesignicons-webfont.ttf#Material Design Icons" />
+        </OnPlatform>
+        <Style x:Key="MaterialIconsLabel" TargetType="{x:Type Label}">
+            <Setter Property="FontFamily" Value="{StaticResource Material}" />
+            <Setter Property="FontSize" Value="100" />
+            <Setter Property="HorizontalOptions" Value="Center" />
+            <Setter Property="VerticalOptions" Value="Center" />
+            <Setter Property="TextColor" Value="LightSkyBlue" />
+            <Setter Property="FontSize" Value="Large" />
+        </Style>
+        <Style x:Key="MaterialIconsButton" TargetType="{x:Type Button}">
+            <Setter Property="FontFamily" Value="{StaticResource Material}" />
+            <Setter Property="FontSize" Value="100" />
+            <Setter Property="HorizontalOptions" Value="Center" />
+            <Setter Property="VerticalOptions" Value="Center" />
+            <Setter Property="TextColor" Value="LightSkyBlue" />
+            <Setter Property="FontSize" Value="Large" />
+        </Style>
 
-		<!-- Application resource dictionary -->
-
-	</Application.Resources>
+    </Application.Resources>
 </prism:PrismApplication>

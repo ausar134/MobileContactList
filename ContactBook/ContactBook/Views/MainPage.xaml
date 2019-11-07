@@ -3,45 +3,57 @@
     x:Class="ContactBook.Views.MainPage"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:converters="clr-namespace:ContactBook.Converters"
     xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:ioc="http://prismlibrary.com"
     Title="{Binding Title}">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Command="{Binding RefreshCommand}" Text="Refresh Contact List"/>
+        <ToolbarItem Command="{Binding RefreshCommand}" Text="Refresh Contact List" />
     </ContentPage.ToolbarItems>
+    <ContentPage.Resources>
+        <converters:PersonToStringValueConverter x:Key="PersonToString" />
+    </ContentPage.Resources>
     <StackLayout
         Padding="20,20,20,20"
         HorizontalOptions="CenterAndExpand"
         VerticalOptions="FillAndExpand">
-        <ListView ItemsSource="{Binding People}" SelectedItem="{Binding SelectedItem}" ItemTapped="{Binding GetSelectedItemCommand}">
+        <Button
+            BackgroundColor="Crimson"
+            Command="{Binding RefreshCommand}"
+            Style="{StaticResource MaterialIconsButton}"
+            Text="&#xf450;"
+            TextColor="FloralWhite" />
+        <ListView ItemsSource="{Binding People}" SelectedItem="{Binding SelectedItem}">
+            <ListView.Behaviors>
+                <ioc:EventToCommandBehavior
+                    Command="{Binding TappedItemCommand}"
+                    CommandParameter="{Binding SelectedItem}"
+                    EventName="ItemTapped" />
+            </ListView.Behaviors>
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <Label Grid.Column="0" Text="{Binding FirstName}"/>
-                            <Label Grid.Column="1" Text="{Binding LastName}"/>
-                            <!--<Label Grid.Column="2" Text="{Binding MobileNumber}"/>
-                            <Label Grid.Column="3" Text="{Binding Email}"/-->
+                            <Label
+                                Grid.Column="0"
+                                HorizontalOptions="FillAndExpand"
+                                HorizontalTextAlignment="Start"
+                                Text="{Binding Path=., Converter={StaticResource PersonToString}}" />
                         </Grid>
                     </ViewCell>
                 </DataTemplate>
             </ListView.ItemTemplate>
-            <ListView.Header>
-                <StackLayout Orientation="Horizontal">
-                    <!--<Label Text="First Name"/>
-                    <Label Text="Last Name"/>
-                    <Label Text="Internal Number"/>
-                    <Label Text="Mobile Number"/>
-                    <Label Text="Email"/>-->
-                </StackLayout>
-            </ListView.Header>
         </ListView>
         <StackLayout>
-            <Button Command="{Binding NavigateToContactDetailsCommand}" Text="Add new contact"/>
+            <Button
+                BackgroundColor="LightSkyBlue"
+                Command="{Binding NavigateToContactDetailsCommand}"
+                Text="Add new contact" />
         </StackLayout>
     </StackLayout>
 

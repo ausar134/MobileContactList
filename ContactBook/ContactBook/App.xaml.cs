@@ -30,7 +30,7 @@ namespace ContactBook
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            containerRegistry.RegisterInstance(RestService.For<IContactsApi>("https://api.nessos.gr/contacts"));
+            containerRegistry.RegisterInstance(RestService.For<IContactsApi>("https://api.nessos.gr"));
          
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterForNavigation<MainPage, MainPageViewModel>();

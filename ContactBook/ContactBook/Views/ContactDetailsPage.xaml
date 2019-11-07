@@ -6,54 +6,79 @@
     xmlns:d="http://xamarin.com/schemas/2014/forms/design"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodels="clr-namespace:ContactBook.ViewModels"
+    Title="{Binding Title}"
     x:DataType="viewmodels:ContactDetailsPageViewModel"
-    mc:Ignorable="d"
-    Title="{Binding Title}">
+    mc:Ignorable="d">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Command="{Binding SaveContactDetailsCommand}" Text="Save Contact"/>
+        <ToolbarItem Command="{Binding SaveContactDetailsCommand}" Text="Save Contact" />
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout Margin="30,20,30,20">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <Label Grid.Row= "0" 
-                       Grid.Column="0" 
-                       Text="First Name"/>
-                <Entry Grid.Row="0"
-                       Grid.Column="1" 
-                       Text="{Binding FirstName}"/>
-                <Label Grid.Row="1"
-                       Grid.Column="0" 
-                       Text="Last Name"/>
-                <Entry Grid.Row="1"
-                       Grid.Column="1"
-                       Text="{Binding LastName}"/>
-                <Label Grid.Row="2"
-                       Grid.Column="0"
-                       Text="Mobile Number"/>
-                <Entry Grid.Row="2"
-                       Grid.Column="1"
-                       Text="{Binding MobileNumber}"/>
-                <Label Grid.Row="3"
-                       Grid.Column="0"
-                       Text="Email"/>
-                <Entry Grid.Row="3"
-                       Grid.Column="1"
-                       Text="{Binding Email}"/>
+                <Label
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Text="First Name" />
+                <Entry
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Placeholder="First Name"
+                    Text="{Binding FirstName}" />
+                <Label
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Text="Last Name" />
+                <Entry
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Placeholder="Last Name"
+                    Text="{Binding LastName}" />
+                <Label
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Text="Mobile Number" />
+                <Entry
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    Placeholder="Mobile Number"
+                    Text="{Binding MobileNumber}" />
+                <Label
+                    Grid.Row="3"
+                    Grid.Column="0"
+                    Text="Email" />
+                <Entry
+                    Grid.Row="3"
+                    Grid.Column="1"
+                    Placeholder="Email"
+                    Text="{Binding Email}" />
+                <Label
+                    Grid.Row="4"
+                    Grid.Column="0"
+                    Text="Internal Phone" />
+                <Entry
+                    Grid.Row="4"
+                    Grid.Column="1"
+                    Placeholder="Internal Phone"
+                    Text="{Binding InternalPhone}" />
             </Grid>
-            <StackLayout>
-                <Button Command="{Binding CancelCommand}" Text="Cancel"/>
+            <StackLayout Orientation="Horizontal">
+                <Button
+                    Command="{Binding DeleteCommand}"
+                    Style="{x:StaticResource CancelButtonStyle}"
+                    Text="Delete" />
+                <Button Command="{Binding CancelCommand}" Text="Cancel" />
             </StackLayout>
         </StackLayout>
     </ContentPage.Content>

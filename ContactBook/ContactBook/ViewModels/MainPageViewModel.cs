@@ -14,7 +14,7 @@ namespace ContactBook.ViewModels
 {
     public class MainPageViewModel : ViewModelBase
     {
-        private readonly IContactsApi _api;
+        private IContactsApi Api { get; }
         private bool _hasInitialized;
         
         public MainPageViewModel(INavigationService navigationService, IContactsApi api)
@@ -22,12 +22,13 @@ namespace ContactBook.ViewModels
         {
             Title = "Nessos Contacts";
 
-            _api = api;
+            Api = api;
 
-            
+            //Command structure without parameters
             NavigateToContactDetailsCommand = new DelegateCommand(NavigateToContactDetailsPage);
 
-            GetSelectedItemCommand = new DelegateCommand(GetSelectedItem); 
+            //Command structure that takes parameters
+            TappedItemCommand = new DelegateCommand<Person>(async (p) => await TappedItem(p));
 
             RefreshCommand = new DelegateCommand(async () =>
              {
@@ -35,17 +36,15 @@ namespace ContactBook.ViewModels
              });
         }
 
-
-        private bool _isSelected = false;
-        public bool IsSelected => _isSelected;
-
+        public bool IsSelected => SelectedItem != null;
         private Person _selectedItem;
         public Person SelectedItem {
             get => _selectedItem;
             set => SetProperty(ref _selectedItem, value, () => RaisePropertyChanged(nameof(IsSelected)));
         }
+        
+        public DelegateCommand<Person> TappedItemCommand { get; }
 
-        public DelegateCommand GetSelectedItemCommand { get; }
         public DelegateCommand RefreshCommand { get; }
 
         public DelegateCommand NavigateToContactDetailsCommand { get; }
@@ -64,27 +63,23 @@ namespace ContactBook.ViewModels
             }
             #endregion
 
-            #region Handles contact from add/edit operations
+            var action = parameters["action"] as ApiAction?;
             var person = parameters["person"] as Person;
-            if(person == null)
-            {
+            if (person == null)
                 return;
-            }
 
             var existingPerson = People.SingleOrDefault(x => x.Id == person.Id);
-            if (existingPerson == null)
-            {
-                People.Add(person);
-            }
-            else
+            if (existingPerson != null)
             {
                 People.Remove(existingPerson);
+            }
+            if (action != ApiAction.Deleted) 
+            {
                 People.Add(person);
             }
-            #endregion
         }
 
-        public async void NavigateToContactDetailsPage()
+        private async void NavigateToContactDetailsPage()
         {
             await NavigationService.NavigateAsync("ContactDetailsPage");
         }
@@ -93,7 +88,8 @@ namespace ContactBook.ViewModels
         {
             try
             {
-                People.ReplaceRange(await _api.GetPeopleAsync());
+                var contacts = await Api.GetPeopleAsync();
+                People.ReplaceRange(contacts);
             }
             catch (Exception exception)
             {
@@ -101,13 +97,13 @@ namespace ContactBook.ViewModels
             }
         }
 
-        public async void GetSelectedItem()
+        private async Task TappedItem(Person p)
         {
-            if (_isSelected == true)
+            var parameters = new NavigationParameters
             {
-                
-                await NavigationService.NavigateAsync("ContactDetailsPage");
-            }
+                {"person",p }
+            };
+            await NavigationService.NavigateAsync("ContactDetailsPage", parameters);
         }
         
     }
