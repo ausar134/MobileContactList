@@ -9,7 +9,7 @@
     Title="{Binding Title}">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Command="{Binding RefreshCommand}" Text="Refresh Contact List" />
+        <ToolbarItem Command="{Binding RefreshCommand}" Text="Refresh Contact List"/>
     </ContentPage.ToolbarItems>
     <ContentPage.Resources>
         <converters:PersonToStringValueConverter x:Key="PersonToString" />
@@ -18,18 +18,12 @@
         Padding="20,20,20,20"
         HorizontalOptions="CenterAndExpand"
         VerticalOptions="FillAndExpand">
-        <Button
-            BackgroundColor="Crimson"
-            Command="{Binding RefreshCommand}"
-            Style="{StaticResource MaterialIconsButton}"
-            Text="&#xf450;"
-            TextColor="FloralWhite" />
         <ListView ItemsSource="{Binding People}" SelectedItem="{Binding SelectedItem}">
             <ListView.Behaviors>
-                <ioc:EventToCommandBehavior
+                <ioc:EventToCommandBehavior 
                     Command="{Binding TappedItemCommand}"
-                    CommandParameter="{Binding SelectedItem}"
-                    EventName="ItemTapped" />
+                    CommandParameter="{Binding SelectedItem}" 
+                    EventName="ItemTapped"/>
             </ListView.Behaviors>
             <ListView.ItemTemplate>
                 <DataTemplate>
@@ -49,9 +43,12 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
+        <!--<StackLayout>
+            <Button Command="{Binding RefreshCommand}" Text="Refresh" Style ="{StaticResource MaterialIconsButton}"/>
+        </StackLayout>-->
         <StackLayout>
             <Button
-                BackgroundColor="LightSkyBlue"
+                BackgroundColor="#5A70C9"
                 Command="{Binding NavigateToContactDetailsCommand}"
                 Text="Add new contact" />
         </StackLayout>

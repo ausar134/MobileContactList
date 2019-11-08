@@ -6,6 +6,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using ContactBook.Models;
 using Refit;
+using Xamarin.Forms.Internals;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace ContactBook
@@ -26,6 +27,12 @@ namespace ContactBook
             InitializeComponent();
             
             await NavigationService.NavigateAsync("NavigationPage/MainPage");
+        }
+
+        protected override void OnStart()
+        {
+            
+            base.OnStart();
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)

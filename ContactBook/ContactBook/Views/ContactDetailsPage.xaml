@@ -25,51 +25,30 @@
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <Label
-                    Grid.Row="0"
-                    Grid.Column="0"
-                    Text="First Name" />
                 <Entry
                     Grid.Row="0"
-                    Grid.Column="1"
+                    Grid.Column="0"
                     Placeholder="First Name"
                     Text="{Binding FirstName}" />
-                <Label
-                    Grid.Row="1"
-                    Grid.Column="0"
-                    Text="Last Name" />
                 <Entry
                     Grid.Row="1"
-                    Grid.Column="1"
+                    Grid.Column="0"
                     Placeholder="Last Name"
                     Text="{Binding LastName}" />
-                <Label
-                    Grid.Row="2"
-                    Grid.Column="0"
-                    Text="Mobile Number" />
                 <Entry
                     Grid.Row="2"
-                    Grid.Column="1"
+                    Grid.Column="0"
                     Placeholder="Mobile Number"
                     Text="{Binding MobileNumber}" />
-                <Label
-                    Grid.Row="3"
-                    Grid.Column="0"
-                    Text="Email" />
                 <Entry
                     Grid.Row="3"
-                    Grid.Column="1"
+                    Grid.Column="0"
                     Placeholder="Email"
                     Text="{Binding Email}" />
-                <Label
-                    Grid.Row="4"
-                    Grid.Column="0"
-                    Text="Internal Phone" />
                 <Entry
                     Grid.Row="4"
-                    Grid.Column="1"
+                    Grid.Column="0"
                     Placeholder="Internal Phone"
                     Text="{Binding InternalPhone}" />
             </Grid>

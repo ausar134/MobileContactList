@@ -11,7 +11,7 @@ using Prism.Navigation;
 namespace ContactBook.ViewModels
 {
     public class ContactDetailsPageViewModel : ViewModelBase
-    {
+        {
         public ContactDetailsPageViewModel(INavigationService navigationService, IContactsApi api)
             : base(navigationService)
         {
