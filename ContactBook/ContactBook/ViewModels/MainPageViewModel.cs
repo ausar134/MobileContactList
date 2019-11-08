@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ContactBook.Models;
 using ContactBook.Views;
+using Microsoft.Extensions.Logging;
 using MvvmHelpers;
 using Prism.Commands;
 using Prism.Navigation;
@@ -14,16 +15,13 @@ namespace ContactBook.ViewModels
 {
     public class MainPageViewModel : ViewModelBase
     {
-        private IContactsApi Api { get; }
         private bool _hasInitialized;
         
-        public MainPageViewModel(INavigationService navigationService, IContactsApi api)
-            : base(navigationService)
+        public MainPageViewModel(INavigationService navigationService, IContactsApi api, ILogger<MainPageViewModel> logger)
+            : base(navigationService, logger, api)
         {
             Title = "Nessos Contacts";
-
-            Api = api;
-
+            
             //Command structure without parameters
             NavigateToContactDetailsCommand = new DelegateCommand(NavigateToContactDetailsPage);
 
@@ -88,11 +86,13 @@ namespace ContactBook.ViewModels
         {
             try
             {
+                Logger.LogInformation("Requesting contacts from server");
                 var contacts = await Api.GetPeopleAsync();
                 People.ReplaceRange(contacts);
             }
             catch (Exception exception)
             {
+                Logger.LogError(exception, "Something went wrong! Reason: {Reason}",exception.Message);
                 await App.Current.MainPage.DisplayAlert("error", exception.Message, "Ok");
             }
         }

@@ -4,8 +4,11 @@ using Android.OS;
 using Prism;
 using Prism.Ioc;
 using Serilog;
+using Serilog.Context;
 using Serilog.Core;
 using System;
+using System.Reflection;
+using Xamarin.Essentials;
 
 namespace ContactBook.Droid
 {
@@ -15,9 +18,15 @@ namespace ContactBook.Droid
         private LoggingLevelSwitch levelSwitch = new LoggingLevelSwitch();
         protected override void OnCreate(Bundle bundle)
         {
+            var deviceId = Android.Provider.Settings.Secure.GetString(
+                Application.Context.ContentResolver,
+                Android.Provider.Settings.Secure.AndroidId);
+
             Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.ControlledBy(levelSwitch)
                 .Enrich.FromLogContext()
                 .Enrich.WithThreadId()
+                .Enrich.WithProperty("DeviceId", deviceId)
                 .WriteTo.AndroidLog()
                 .WriteTo.Seq(
                 apiKey: "GquTIyDKLV0vI269oyUb",
@@ -30,11 +39,18 @@ namespace ContactBook.Droid
                 var exception = args.ExceptionObject as Exception;
                 Log.Fatal(exception, "Unhandled exception: {Message}", exception?.Message ?? string.Empty);
             };
+            
+            base.OnCreate(bundle);
+            Platform.Init(this, bundle);
+
+            LogContext.PushProperty("Manufacturer", DeviceInfo.Manufacturer);
+            LogContext.PushProperty("Model", DeviceInfo.Model);
+            LogContext.PushProperty("OS", DeviceInfo.Platform);
+            LogContext.PushProperty("Version", DeviceInfo.Version);
+            LogContext.PushProperty("Application", Assembly.GetExecutingAssembly().GetName().Name);
 
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
-
-            base.OnCreate(bundle);
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
             LoadApplication(new App(new AndroidInitializer()));

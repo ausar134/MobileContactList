@@ -6,7 +6,14 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using ContactBook.Models;
 using Refit;
-using Xamarin.Forms.Internals;
+using Serilog.Context;
+using Xamarin.Essentials;
+using Serilog.Extensions.Logging;
+using Serilog;
+using Microsoft.Extensions.Logging;
+using Prism.DryIoc;
+using DryIoc;
+using System;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace ContactBook
@@ -30,13 +37,19 @@ namespace ContactBook
         }
 
         protected override void OnStart()
-        {
+        {            
             
-            base.OnStart();
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            var loggerFactory = new LoggerFactory().AddSerilog();
+            var container = containerRegistry.GetContainer();
+
+            var loggerFactoryMethod = typeof(LoggerFactoryExtensions).GetMethod("CreateLogger", new Type[] { typeof(ILoggerFactory) });
+            container.UseInstance(typeof(ILoggerFactory), loggerFactory);
+            container.Register(typeof(ILogger<>), made: Made.Of(req => loggerFactoryMethod.MakeGenericMethod(req.Parent.ImplementationType)));
+
             containerRegistry.RegisterInstance(RestService.For<IContactsApi>("https://api.nessos.gr"));
          
             containerRegistry.RegisterForNavigation<NavigationPage>();

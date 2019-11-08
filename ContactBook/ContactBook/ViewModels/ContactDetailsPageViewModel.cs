@@ -1,31 +1,52 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using ContactBook.Models;
 using ContactBook.Views;
+using Microsoft.Extensions.Logging;
 using Prism.Commands;
 using Prism.Navigation;
-
+using Refit;
+using Serilog.Context;
 
 namespace ContactBook.ViewModels
 {
     public class ContactDetailsPageViewModel : ViewModelBase
         {
-        public ContactDetailsPageViewModel(INavigationService navigationService, IContactsApi api)
-            : base(navigationService)
+        public ContactDetailsPageViewModel(INavigationService navigationService, IContactsApi api, ILogger<ContactDetailsPageViewModel> logger)
+            : base(navigationService, logger, api)
         {
             Title = "Contact Details";
-            Api = api;
             SaveContactDetailsCommand = new DelegateCommand(SaveContactDetails);
             CancelCommand = new DelegateCommand(Cancel);
-            
-            DeleteCommand = new DelegateCommand(async () => { await Delete(); });
+
+            DeleteCommand = new DelegateCommand(async () =>
+            {
+                using (LogContext.PushProperty("X-Correlation-Id", Guid.NewGuid()))
+                {
+                    await Delete();
+                }
+            });
         }
 
-        private IContactsApi Api { get; }
-
         private Person person;
+
+        private bool isBusy;
+        public bool IsBusy
+        {
+            get => isBusy;
+            set => SetProperty(ref isBusy, value, () =>
+            {
+                RaisePropertyChanged(nameof(CanDelete));
+                RaisePropertyChanged(nameof(IsNotBusy));
+            });
+        }
+
+        public bool IsNotBusy => !IsBusy;
+
+        public bool CanDelete => person?.Id > 0 && !IsBusy;
 
         private ApiAction Action { get; set; }
 
@@ -72,6 +93,7 @@ namespace ContactBook.ViewModels
             catch(Exception e)
             {
                 await App.Current.MainPage.DisplayAlert("error", e.Message, "Ok");
+                return;
             }
 
             var parameters = new NavigationParameters
@@ -92,12 +114,27 @@ namespace ContactBook.ViewModels
         {
             try
             {
+                IsBusy = true;
+                await Task.Delay(5000);
+                Logger.LogTrace(LogMessages.DeletingContact, person);
                 await Api.DeletePersonAsync(person.Id);
                 Action = ApiAction.Deleted;
             }
-            catch (Exception ex)
+            catch (ApiException exception) when (exception.StatusCode==HttpStatusCode.NotFound)
             {
-                await App.Current.MainPage.DisplayAlert("error", ex.Message, "Ok");
+                Logger.LogError(exception, LogMessages.TriedToDeleteNonExistingContact, person.Id);
+                await App.Current.MainPage.DisplayAlert("error", "No such contact on the server!", "Ok");
+                return;
+            }
+            catch (Exception exception)
+            {
+                Logger.LogError(exception, "Something went wrong! Reason: {Reason}", exception.Message);
+                throw exception;
+                return;
+            }
+            finally
+            {
+                IsBusy = false;
             }
 
             var parameters = new NavigationParameters
@@ -105,6 +142,9 @@ namespace ContactBook.ViewModels
                 {"person",person },
                 {"action",Action },
             };
+
+           
+           
             await NavigationService.GoBackAsync(parameters);
         }
 
@@ -118,9 +158,8 @@ namespace ContactBook.ViewModels
             MobileNumber = person.MobileNumber;
             Email = person.EmailAddress;
             InternalPhone = person.InternalPhone;
-
+            RaisePropertyChanged(nameof(CanDelete));
             base.OnNavigatedTo(parameters);
-        }
-
+        } 
     }
 }

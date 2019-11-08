@@ -1,3 +1,5 @@
+using ContactBook.Models;
+using Microsoft.Extensions.Logging;
 using Prism.Mvvm;
 using Prism.Navigation;
 
@@ -14,9 +16,15 @@ namespace ContactBook.ViewModels
             set { SetProperty(ref _title, value); }
         }
 
-        public ViewModelBase(INavigationService navigationService)
+        protected ILogger Logger { get; }
+
+        protected IContactsApi Api { get; }
+
+        public ViewModelBase(INavigationService navigationService, ILogger logger, IContactsApi api)
         {
             NavigationService = navigationService;
+            Logger = logger;
+            Api = api;
         }
 
         public virtual void Initialize(INavigationParameters parameters)

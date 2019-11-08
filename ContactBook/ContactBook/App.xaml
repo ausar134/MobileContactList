@@ -3,8 +3,10 @@
     x:Class="ContactBook.App"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:prism="clr-namespace:Prism.DryIoc;assembly=Prism.DryIoc.Forms">
+    xmlns:prism="clr-namespace:Prism.DryIoc;assembly=Prism.DryIoc.Forms"
+    xmlns:converters="clr-namespace:ContactBook.Converters">
     <Application.Resources>
+        <converters:NotBoolConverter x:Key="InverseBool"></converters:NotBoolConverter>
         <Style x:Key="CancelButtonStyle" TargetType="Button">
             <Setter Property="BackgroundColor" Value="Crimson" />
             <Setter Property="TextColor" Value="WhiteSmoke" />

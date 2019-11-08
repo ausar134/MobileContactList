@@ -14,7 +14,14 @@
         <ToolbarItem Command="{Binding SaveContactDetailsCommand}" Text="Save Contact" />
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
-        <StackLayout Margin="30,20,30,20">
+        <StackLayout Margin="30,20,30,20" IsEnabled="{Binding IsNotBusy}">
+            <ActivityIndicator
+                HorizontalOptions="CenterAndExpand"
+                IsRunning="{Binding IsBusy}"
+                IsVisible="{Binding IsBusy}"
+                VerticalOptions="CenterAndExpand"
+                WidthRequest="40"
+                Color="Red" />
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
@@ -55,6 +62,7 @@
             <StackLayout Orientation="Horizontal">
                 <Button
                     Command="{Binding DeleteCommand}"
+                    IsEnabled="{Binding CanDelete}"
                     Style="{x:StaticResource CancelButtonStyle}"
                     Text="Delete" />
                 <Button Command="{Binding CancelCommand}" Text="Cancel" />
