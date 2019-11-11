@@ -16,6 +16,13 @@ namespace ContactBook.Droid
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
         private LoggingLevelSwitch levelSwitch = new LoggingLevelSwitch();
+
+        public override void OnRequestPermissionsResult
+            (int requestCode, string[] permissions, Android.Content.PM.Permission[] grantResults)
+        {
+            Plugin.Permissions.PermissionsImplementation.Current.OnRequestPermissionsResult
+                (requestCode, permissions, grantResults);
+        }
         protected override void OnCreate(Bundle bundle)
         {
             var deviceId = Android.Provider.Settings.Secure.GetString(

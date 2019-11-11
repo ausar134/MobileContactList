@@ -1,29 +1,44 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using ContactBook.Models;
 using ContactBook.Views;
 using Microsoft.Extensions.Logging;
+using Plugin.Media;
 using Prism.Commands;
 using Prism.Navigation;
+using Prism.Services;
+using Prism.Services.Dialogs;
 using Refit;
 using Serilog.Context;
+using Xamarin.Forms;
 
 namespace ContactBook.ViewModels
 {
     public class ContactDetailsPageViewModel : ViewModelBase
-        {
-        public ContactDetailsPageViewModel(INavigationService navigationService, IContactsApi api, ILogger<ContactDetailsPageViewModel> logger)
+    {
+        public ContactDetailsPageViewModel(INavigationService navigationService, IContactsApi api,
+            ILogger<ContactDetailsPageViewModel> logger, IPageDialogService pageDialogService)
             : base(navigationService, logger, api)
         {
             Title = "Contact Details";
+
+            _pageDialogService = pageDialogService;
+
+            ErrorStateManager = new ErrorStateManager();
+
+            TakePhotoCommand = new DelegateCommand(TakePhoto);
+
             SaveContactDetailsCommand = new DelegateCommand(SaveContactDetails);
             CancelCommand = new DelegateCommand(Cancel);
 
             DeleteCommand = new DelegateCommand(async () =>
             {
+
+
                 using (LogContext.PushProperty("X-Correlation-Id", Guid.NewGuid()))
                 {
                     await Delete();
@@ -31,7 +46,20 @@ namespace ContactBook.ViewModels
             });
         }
 
+
+
         private Person person;
+
+        private IPageDialogService _pageDialogService;
+
+        public ErrorStateManager ErrorStateManager { get; }
+
+        //public IEnumerable<IValidator> Validators { get; protected set; } = new List<IValidator>();
+
+        private string imagePath; 
+        public string ImagePath { 
+            get { return imagePath; }
+            set { imagePath = value; SetProperty(ref imagePath, value); } }
 
         private bool isBusy;
         public bool IsBusy
@@ -50,10 +78,12 @@ namespace ContactBook.ViewModels
 
         private ApiAction Action { get; set; }
 
-        public DelegateCommand DeleteCommand { get; }
+        public DelegateCommand DeleteCommand { get; private set; }
 
+        public DelegateCommand TakePhotoCommand { get; }
         public DelegateCommand CancelCommand { get; }
         public DelegateCommand SaveContactDetailsCommand { get; }
+   
 
         private string firstName;
 
@@ -90,7 +120,7 @@ namespace ContactBook.ViewModels
                     ? Api.UpdatePersonAsync(person.Id, person)
                     : Api.AddPersonAsync(person));
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 await App.Current.MainPage.DisplayAlert("error", e.Message, "Ok");
                 return;
@@ -102,7 +132,7 @@ namespace ContactBook.ViewModels
                 {"action",Action },
             };
 
-            await NavigationService.GoBackAsync(parameters);            
+            await NavigationService.GoBackAsync(parameters);
         }
 
         private async void Cancel()
@@ -110,8 +140,42 @@ namespace ContactBook.ViewModels
             await NavigationService.GoBackAsync();
         }
 
+        async void TakePhoto()
+        {
+            await CrossMedia.Current.Initialize();
+
+            if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
+            {
+                await _pageDialogService.DisplayAlertAsync("No Camera", ":( No camera available.", "OK");
+
+                return;
+            }
+            var file = await CrossMedia.Current.TakePhotoAsync(new Plugin.Media.Abstractions.StoreCameraMediaOptions
+            {
+                PhotoSize = Plugin.Media.Abstractions.PhotoSize.Medium,
+                Directory = "Sample",
+                Name = "test.jpg"
+            });
+
+            if (file == null)
+                return;
+            ImagePath = file.Path;
+        }
+
         private async Task Delete()
         {
+
+            #region Delete Confirmation
+            var result = await _pageDialogService.DisplayAlertAsync
+                ("Alert", "Are you sure you want to delete this contact?", "Delete", "Cancel");
+
+            if (!result)
+            {
+                return;
+            }
+            #endregion
+
+            #region Delete procedure
             try
             {
                 IsBusy = true;
@@ -120,7 +184,7 @@ namespace ContactBook.ViewModels
                 await Api.DeletePersonAsync(person.Id);
                 Action = ApiAction.Deleted;
             }
-            catch (ApiException exception) when (exception.StatusCode==HttpStatusCode.NotFound)
+            catch (ApiException exception) when (exception.StatusCode == HttpStatusCode.NotFound)
             {
                 Logger.LogError(exception, LogMessages.TriedToDeleteNonExistingContact, person.Id);
                 await App.Current.MainPage.DisplayAlert("error", "No such contact on the server!", "Ok");
@@ -143,16 +207,19 @@ namespace ContactBook.ViewModels
                 {"action",Action },
             };
 
-           
-           
+
+
             await NavigationService.GoBackAsync(parameters);
         }
+        #endregion
+
+        
 
         public override void OnNavigatedTo(INavigationParameters parameters)
         {
 
             person = parameters["person"] as Person ?? new Person();
-            
+
             FirstName = person.FirstName;
             LastName = person.LastName;
             MobileNumber = person.MobileNumber;
@@ -160,6 +227,17 @@ namespace ContactBook.ViewModels
             InternalPhone = person.InternalPhone;
             RaisePropertyChanged(nameof(CanDelete));
             base.OnNavigatedTo(parameters);
-        } 
+        }
+    }
+
+    //private void Validate(IEnumerable<IValidator> validators)
+    //{
+    //    foreach (var validator in validators)
+    //        Validate(validator);
+    //}
+
+    internal interface IValidator
+    {
+
     }
 }

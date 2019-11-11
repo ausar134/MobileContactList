@@ -22,6 +22,17 @@
                 VerticalOptions="CenterAndExpand"
                 WidthRequest="40"
                 Color="Red" />
+            <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+                <Image
+                    Aspect="AspectFill"
+                    HeightRequest="100"
+                    Source="{Binding ImagePath}"
+                    WidthRequest="200" />
+                <Button
+                    x:Name="CameraButton"
+                    Command="{Binding TakePhotoCommand}"
+                    Text="Take Photo" />
+            </StackLayout>
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
@@ -67,6 +78,7 @@
                     Text="Delete" />
                 <Button Command="{Binding CancelCommand}" Text="Cancel" />
             </StackLayout>
+            <StackLayout Orientation="Horizontal" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
