@@ -4,7 +4,7 @@ namespace ContactBook.Models
 {
     public class Person : INotifyPropertyChanged
     {
-        public Field Id { get; set; } = new Field();
+        public int Id { get; set; } 
 
         public Field FirstName { get; set; } = new Field();
 

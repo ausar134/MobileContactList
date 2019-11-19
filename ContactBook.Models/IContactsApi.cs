@@ -22,5 +22,6 @@ namespace ContactBook.Models
         
         [Delete("/api/contact/{id}")]
         Task DeletePersonAsync(long id);
+        Task<Person> UpdatePersonAsync(Field id, Person person);
     }
 }

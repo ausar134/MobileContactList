@@ -84,23 +84,23 @@ namespace ContactBook.ViewModels
         public DelegateCommand SaveContactDetailsCommand { get; }
    
 
-        private string firstName;
+        private Field firstName;
 
-        public string FirstName { get => firstName; set => SetProperty(ref firstName, value); }
+        public Field FirstName { get => firstName; set => SetProperty(ref firstName, value); }
 
-        private string lastName;
-        public string LastName { get => lastName; set => SetProperty(ref lastName, value); }
+        private Field lastName;
+        public Field LastName { get => lastName; set => SetProperty(ref lastName, value); }
 
-        private string mobileNumber;
-        public string MobileNumber { get => mobileNumber; set => SetProperty(ref mobileNumber, value); }
+        private Field mobileNumber;
+        public Field MobileNumber { get => mobileNumber; set => SetProperty(ref mobileNumber, value); }
 
-        private string email;
+        private Field email;
 
-        public string Email { get => email; set => SetProperty(ref email, value); }
+        public Field Email { get => email; set => SetProperty(ref email, value); }
 
-        private int internalPhone;
+        private Field internalPhone;
 
-        public int InternalPhone { get => internalPhone; set => SetProperty(ref internalPhone, value); }
+        public Field InternalPhone { get => internalPhone; set => SetProperty(ref internalPhone, value); }
 
         List<string> errors = new List<string>();
 
