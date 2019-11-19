@@ -6,15 +6,15 @@ namespace ContactBook.Models
     {
         public int Id { get; set; } 
 
-        public Field FirstName { get; set; } = new Field();
+        public string FirstName { get; set; } 
 
-        public Field LastName { get; set; } = new Field();
+        public string LastName { get; set; } 
 
-        public Field EmailAddress { get; set; } = new Field();
+        public string EmailAddress { get; set; } 
 
-        public Field InternalPhone { get; set; } = new Field();
+        public int InternalPhone { get; set; } 
 
-        public Field MobileNumber { get; set; } = new Field();
+        public string MobileNumber { get; set; } 
 
         public event PropertyChangedEventHandler PropertyChanged;
     }

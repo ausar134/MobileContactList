@@ -5,10 +5,9 @@ using System.Diagnostics;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using ContactBook.Models;
-using ContactBook.Validators;
 using ContactBook.Views;
-using FluentValidation.Results;
 using Microsoft.Extensions.Logging;
 using Plugin.Media;
 using Prism.Commands;
@@ -47,9 +46,29 @@ namespace ContactBook.ViewModels
                     await Delete();
                 }
             });
+            
+            OnValidationCommand = new Command((obj) => 
+            {
+                person.FirstName.NotValidMessageError = "First Name is required";
+                //person.FirstName.NotValidMessageError
+                //    = "First Name must have more than 2 characters and less than 30";
+                person.FirstName.IsNotValid = string.IsNullOrEmpty(person.FirstName.Name);
+
+                person.FirstName.IsNotValid = person.FirstName.Name.Length < 2 || person.FirstName.Name.Length > 30;
+
+                person.LastName.NotValidMessageError = "Last Name is required";
+                person.LastName.IsNotValid = (string.IsNullOrEmpty(person.LastName.Name));
+
+                person.MobileNumber.NotValidMessageError = "Mobile Number is required";
+                person.MobileNumber.IsNotValid = (string.IsNullOrEmpty(person.MobileNumber.Name));
+
+                person.EmailAddress.NotValidMessageError = "Email Address is required";
+                person.EmailAddress.IsNotValid = (string.IsNullOrEmpty(person.EmailAddress.Name));
+
+                person.InternalPhone.NotValidMessageError = "Internal Phone is required";
+                person.InternalPhone.IsNotValid = (string.IsNullOrEmpty(person.InternalPhone.Name));
+            });
         }
-
-
 
         private Person person;
 
@@ -83,24 +102,26 @@ namespace ContactBook.ViewModels
         public DelegateCommand CancelCommand { get; }
         public DelegateCommand SaveContactDetailsCommand { get; }
    
+        public bool ErrorMessageVisiliby { get; set; }
+        public ICommand OnValidationCommand { get; set; }
 
-        private Field firstName;
+        private string firstName;
 
-        public Field FirstName { get => firstName; set => SetProperty(ref firstName, value); }
+        public string FirstName { get => firstName; set => SetProperty(ref firstName, value); }
 
-        private Field lastName;
-        public Field LastName { get => lastName; set => SetProperty(ref lastName, value); }
+        private string lastName;
+        public string LastName { get => lastName; set => SetProperty(ref lastName, value); }
 
-        private Field mobileNumber;
-        public Field MobileNumber { get => mobileNumber; set => SetProperty(ref mobileNumber, value); }
+        private string mobileNumber;
+        public string MobileNumber { get => mobileNumber; set => SetProperty(ref mobileNumber, value); }
 
-        private Field email;
+        private string email;
 
-        public Field Email { get => email; set => SetProperty(ref email, value); }
+        public string Email { get => email; set => SetProperty(ref email, value); }
 
-        private Field internalPhone;
+        private int internalPhone;
 
-        public Field InternalPhone { get => internalPhone; set => SetProperty(ref internalPhone, value); }
+        public int InternalPhone { get => internalPhone; set => SetProperty(ref internalPhone, value); }
 
         List<string> errors = new List<string>();
 
@@ -111,18 +132,6 @@ namespace ContactBook.ViewModels
             person.MobileNumber = MobileNumber;
             person.EmailAddress = Email;
             person.InternalPhone = InternalPhone;
-
-            //PersonValidator myValidator = new PersonValidator();
-
-           // ValidationResult validationsResults = myValidator.Validate(person);
-
-            //if (validationsResults.IsValid == false)
-            //{
-            //    foreach(ValidationFailure failure in validationsResults.Errors)
-            //    {
-            //        errors.Add(failure.ErrorMessage);
-            //    }
-            //}
 
             try
             {
