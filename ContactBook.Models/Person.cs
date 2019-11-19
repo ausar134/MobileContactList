@@ -1,17 +1,30 @@
+using System.ComponentModel;
+
 namespace ContactBook.Models
 {
-    public class Person
+    public class Person : INotifyPropertyChanged
     {
-        public long Id { get; set; }
+        public Field Id { get; set; } = new Field();
 
-        public string FirstName { get; set; }
+        public Field FirstName { get; set; } = new Field();
 
-        public string LastName { get; set; }
+        public Field LastName { get; set; } = new Field();
 
-        public string EmailAddress { get; set; }
+        public Field EmailAddress { get; set; } = new Field();
 
-        public int InternalPhone { get; set; }
+        public Field InternalPhone { get; set; } = new Field();
 
-        public string MobileNumber { get; set; }
+        public Field MobileNumber { get; set; } = new Field();
+
+        public event PropertyChangedEventHandler PropertyChanged;
+    }
+
+    public class Field : INotifyPropertyChanged
+    {
+        public string Name { get; set; }
+        public bool IsNotValid { get; set; }
+        public string NotValidMessageError { get; set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

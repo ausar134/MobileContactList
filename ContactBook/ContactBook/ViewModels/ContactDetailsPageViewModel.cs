@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using ContactBook.Models;
+using ContactBook.Validators;
 using ContactBook.Views;
+using FluentValidation.Results;
 using Microsoft.Extensions.Logging;
 using Plugin.Media;
 using Prism.Commands;
@@ -26,9 +29,9 @@ namespace ContactBook.ViewModels
         {
             Title = "Contact Details";
 
-            _pageDialogService = pageDialogService;
+            //errorListBox.DataSource = errors;
 
-            ErrorStateManager = new ErrorStateManager();
+            _pageDialogService = pageDialogService;
 
             TakePhotoCommand = new DelegateCommand(TakePhoto);
 
@@ -51,10 +54,6 @@ namespace ContactBook.ViewModels
         private Person person;
 
         private IPageDialogService _pageDialogService;
-
-        public ErrorStateManager ErrorStateManager { get; }
-
-        //public IEnumerable<IValidator> Validators { get; protected set; } = new List<IValidator>();
 
         private string imagePath; 
         public string ImagePath { 
@@ -103,6 +102,8 @@ namespace ContactBook.ViewModels
 
         public int InternalPhone { get => internalPhone; set => SetProperty(ref internalPhone, value); }
 
+        List<string> errors = new List<string>();
+
         private async void SaveContactDetails()
         {
             person.FirstName = FirstName;
@@ -110,6 +111,18 @@ namespace ContactBook.ViewModels
             person.MobileNumber = MobileNumber;
             person.EmailAddress = Email;
             person.InternalPhone = InternalPhone;
+
+            //PersonValidator myValidator = new PersonValidator();
+
+           // ValidationResult validationsResults = myValidator.Validate(person);
+
+            //if (validationsResults.IsValid == false)
+            //{
+            //    foreach(ValidationFailure failure in validationsResults.Errors)
+            //    {
+            //        errors.Add(failure.ErrorMessage);
+            //    }
+            //}
 
             try
             {
@@ -228,16 +241,5 @@ namespace ContactBook.ViewModels
             RaisePropertyChanged(nameof(CanDelete));
             base.OnNavigatedTo(parameters);
         }
-    }
-
-    //private void Validate(IEnumerable<IValidator> validators)
-    //{
-    //    foreach (var validator in validators)
-    //        Validate(validator);
-    //}
-
-    internal interface IValidator
-    {
-
     }
 }
