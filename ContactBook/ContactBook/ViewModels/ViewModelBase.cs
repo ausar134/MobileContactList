@@ -27,6 +27,11 @@ namespace ContactBook.ViewModels
             Api = api;
         }
 
+        public ViewModelBase(INavigationService navigationService)
+        {
+            NavigationService = navigationService;
+        }
+
         public virtual void Initialize(INavigationParameters parameters)
         {
 

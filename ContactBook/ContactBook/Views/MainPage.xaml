@@ -47,11 +47,22 @@
             <Button Command="{Binding RefreshCommand}" Text="Refresh" Style ="{StaticResource MaterialIconsButton}"/>
         </StackLayout>-->
         <StackLayout>
-            <Button
-                BackgroundColor="#5A70C9"
+            <Button 
+                HorizontalOptions="CenterAndExpand" 
+ HeightRequest="50" 
+                BorderRadius ="70"
+                BackgroundColor="#70c95a"
                 Command="{Binding NavigateToContactDetailsCommand}"
-                Text="Add new contact" />
+                Text="Add" />
         </StackLayout>
+        <!--<StackLayout>
+            <Button 
+                HorizontalOptions="StartAndExpand" 
+                HeightRequest="50" 
+                BorderRadius ="70" 
+                BackgroundColor="#5A70C9"
+                Text="About"/>
+        </StackLayout>-->
     </StackLayout>
 
 </ContentPage>

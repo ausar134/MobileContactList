@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="8.5.1" />
+    <PackageReference Include="Matcha.Validation" Version="1.0.1" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="3.0.1" />
     <PackageReference Include="Prism.Core" Version="7.2.0.1367" />
     <PackageReference Include="PropertyChanged.Fody" Version="3.1.3" />

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using ContactBook.Models;
 using ContactBook.Views;
+using Matcha.Validation;
 using Microsoft.Extensions.Logging;
 using Plugin.Media;
 using Prism.Commands;
@@ -18,19 +19,23 @@ using Refit;
 using Serilog.Context;
 using Xamarin.Forms;
 
+
 namespace ContactBook.ViewModels
 {
     public class ContactDetailsPageViewModel : ViewModelBase
     {
+
         public ContactDetailsPageViewModel(INavigationService navigationService, IContactsApi api,
             ILogger<ContactDetailsPageViewModel> logger, IPageDialogService pageDialogService)
             : base(navigationService, logger, api)
         {
             Title = "Contact Details";
 
-            //errorListBox.DataSource = errors;
-
             _pageDialogService = pageDialogService;
+
+            _validationService = new ValidationService<ContactDetailsPageViewModel>(this);
+
+            EntryNotEmptyRule = ValidationService.Add(p => new IsNotNullOrEmptyRule(nameof(p.FirstName)));
 
             TakePhotoCommand = new DelegateCommand(TakePhoto);
 
@@ -47,32 +52,39 @@ namespace ContactBook.ViewModels
                 }
             });
             
-            OnValidationCommand = new Command((obj) => 
-            {
-                person.FirstName.NotValidMessageError = "First Name is required";
-                //person.FirstName.NotValidMessageError
-                //    = "First Name must have more than 2 characters and less than 30";
-                person.FirstName.IsNotValid = string.IsNullOrEmpty(person.FirstName.Name);
+            //OnValidationCommand = new Command((obj) => 
+            //{
+            //    person.FirstName.NotValidMessageError = "First Name is required";
+            //    //person.FirstName.NotValidMessageError
+            //    //    = "First Name must have more than 2 characters and less than 30";
+            //    person.FirstName.IsNotValid = string.IsNullOrEmpty(person.FirstName.Name);
 
-                person.FirstName.IsNotValid = person.FirstName.Name.Length < 2 || person.FirstName.Name.Length > 30;
+            //    person.FirstName.IsNotValid = person.FirstName.Name.Length < 2 || person.FirstName.Name.Length > 30;
 
-                person.LastName.NotValidMessageError = "Last Name is required";
-                person.LastName.IsNotValid = (string.IsNullOrEmpty(person.LastName.Name));
+            //    person.LastName.NotValidMessageError = "Last Name is required";
+            //    person.LastName.IsNotValid = (string.IsNullOrEmpty(person.LastName.Name));
 
-                person.MobileNumber.NotValidMessageError = "Mobile Number is required";
-                person.MobileNumber.IsNotValid = (string.IsNullOrEmpty(person.MobileNumber.Name));
+            //    person.MobileNumber.NotValidMessageError = "Mobile Number is required";
+            //    person.MobileNumber.IsNotValid = (string.IsNullOrEmpty(person.MobileNumber.Name));
 
-                person.EmailAddress.NotValidMessageError = "Email Address is required";
-                person.EmailAddress.IsNotValid = (string.IsNullOrEmpty(person.EmailAddress.Name));
+            //    person.EmailAddress.NotValidMessageError = "Email Address is required";
+            //    person.EmailAddress.IsNotValid = (string.IsNullOrEmpty(person.EmailAddress.Name));
 
-                person.InternalPhone.NotValidMessageError = "Internal Phone is required";
-                person.InternalPhone.IsNotValid = (string.IsNullOrEmpty(person.InternalPhone.Name));
-            });
+            //    person.InternalPhone.NotValidMessageError = "Internal Phone is required";
+            //    person.InternalPhone.IsNotValid = (string.IsNullOrEmpty(person.InternalPhone.Name));
+            //});
         }
 
         private Person person;
 
         private IPageDialogService _pageDialogService;
+
+        private ValidationService<ContactDetailsPageViewModel> _validationService;
+        public ValidationService<ContactDetailsPageViewModel> ValidationService
+        {
+            get => _validationService;
+            set => SetProperty(ref _validationService, value);
+        }
 
         private string imagePath; 
         public string ImagePath { 
@@ -103,7 +115,7 @@ namespace ContactBook.ViewModels
         public DelegateCommand SaveContactDetailsCommand { get; }
    
         public bool ErrorMessageVisiliby { get; set; }
-        public ICommand OnValidationCommand { get; set; }
+      //  public ICommand OnValidationCommand { get; set; }
 
         private string firstName;
 
@@ -123,7 +135,7 @@ namespace ContactBook.ViewModels
 
         public int InternalPhone { get => internalPhone; set => SetProperty(ref internalPhone, value); }
 
-        List<string> errors = new List<string>();
+     //   List<string> errors = new List<string>();
 
         private async void SaveContactDetails()
         {

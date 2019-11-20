@@ -25,7 +25,7 @@
             <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
                 <Image
                     Aspect="AspectFill"
-                    HeightRequest="100"
+                    HeightRequest="50"
                     Source="{Binding ImagePath}"
                     WidthRequest="200" />
                 <Button
